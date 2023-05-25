@@ -1,6 +1,6 @@
 package ro.contezi
 
-class Pipeline {
+public class Pipeline {
 
   def context
 
