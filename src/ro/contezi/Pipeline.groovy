@@ -10,7 +10,7 @@ public class Pipeline implements Serializable {
 
   void run() {
     context.node {
-      context.sh "echo 'Hello pipeline'"
+      context.sh "echo 'Hello pipeline with context " + context.getClass() + "'"
     }
   }
 }
