@@ -1,6 +1,6 @@
 package ro.contezi
 
-public class Pipeline {
+public class Pipeline implements Serializable {
 
   def context
 
@@ -9,6 +9,8 @@ public class Pipeline {
   }
 
   void run() {
-    context.sh "echo 'Hello pipeline'"
+    context.node {
+      context.sh "echo 'Hello pipeline'"
+    }
   }
 }
