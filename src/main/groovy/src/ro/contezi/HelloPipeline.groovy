@@ -10,7 +10,11 @@ public class HelloPipeline implements Serializable {
 
   void run() {
     context.node {
-      context.sh "echo 'Hello pipeline'"
+      sayHello()
     }
+  }
+
+  void sayHello() {
+    context.sh "echo 'Hello pipeline'"
   }
 }
