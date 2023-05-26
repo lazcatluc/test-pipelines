@@ -2,7 +2,7 @@ package ro.contezi
 
 public class HelloPipeline implements Serializable {
 
-  def context
+  PipelineContext context
 
   public HelloPipeline(context) {
     this.context = context;
