@@ -9,9 +9,11 @@ public class HelloPipeline implements Serializable {
   }
 
   void run() {
+    pipeline {
       context.stage("Hi") {
         sayHello()
       }
+    }
   }
 
   void sayHello() {
