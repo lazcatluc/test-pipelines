@@ -10,7 +10,6 @@ public class HelloPipeline implements Serializable {
 
   void run() {
     context.pipeline {
-      context.agent context.any
       context.parameters {
         context.choice(choices: ['A', 'B'], name: 'PARAM')
       }
