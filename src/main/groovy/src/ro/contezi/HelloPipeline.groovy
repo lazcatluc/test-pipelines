@@ -10,8 +10,11 @@ public class HelloPipeline implements Serializable {
 
   void run() {
     pipeline {
-      context.stage("Hi") {
-        sayHello()
+      agent any
+      stages {
+        stage("Hi") {
+          sayHello()
+        }
       }
     }
   }
