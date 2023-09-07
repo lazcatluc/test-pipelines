@@ -9,12 +9,15 @@ public class HelloPipeline implements Serializable {
   }
 
   void run() {
+    context.parameters {
+      context.choice (choices: ['A', 'B'], name: 'PARAM')
+    }
     context.node {
       sayHello()
     }
   }
 
   void sayHello() {
-    context.sh "echo 'Hello pipeline'"
+    context.sh "echo 'Hello pipeline with param ${context.params.PARAM}'"
   }
 }
