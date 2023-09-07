@@ -9,11 +9,16 @@ public class HelloPipeline implements Serializable {
   }
 
   void run() {
-    context.parameters {
-      context.choice (choices: ['A', 'B'], name: 'PARAM')
-    }
-    context.node {
-      sayHello()
+    context.pipeline {
+      context.agent context.any
+      context.parameters {
+        context.choice(choices: ['A', 'B'], name: 'PARAM')
+      }
+      context.stages {
+        context.stage {
+          sayHello()
+        }
+      }
     }
   }
 
