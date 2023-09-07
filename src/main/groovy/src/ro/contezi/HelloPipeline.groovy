@@ -9,17 +9,19 @@ public class HelloPipeline implements Serializable {
   }
 
   void run() {
-    pipeline {
-      agent any
-      stages {
-        stage("Hi") {
-          sayHello()
-        }
+    context.properties ([
+        context.parameters ([
+            context.choice(choices: ['A', 'B'], name: 'PARAM')
+        ])
+    ])
+    context.node {
+      context.stage("Hi") {
+        sayHello()
       }
     }
   }
 
   void sayHello() {
-    context.sh "echo 'Hello pipeline with param ${context.params.PARAM}'"
+    context.sh "echo 'Hello pipeline'"
   }
 }
