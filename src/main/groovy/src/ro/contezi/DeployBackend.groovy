@@ -46,18 +46,44 @@ public class DeployBackend {
             context.env.MAVEN_HOME = "${maven}"
             context.env.PATH = "${jdk}/bin:${maven}/bin:${context.env.PATH}"
             compile()
+            vulnerabilityCheck()
+
         }
     }
 
     protected void compile() {
         context.stage('Compilazione') {
-            context.steps {
-
+            context.echo "MODALITA = ${context.params.MODALITA}"
+            context.echo "PATH = ${context.env.PATH}"
+            context.echo "M2_HOME = ${context.env.M2_HOME}"
+            context.configFileProvider([
+                    context.configFile(fileId: 'global-maven-settings', targetLocation: 'testfile.xml')
+            ]) {
+                context.echo "dentro config"
+                context.sh "mvn package -s testfile.xml"
             }
         }
     }
 
-    void run() {
+    protected void vulnerabilityCheck() {
+        context.stage('Controllo vulnerabilità') {
+            context.dependencyCheck additionalArguments: """
+                --disableOssIndex
+                --disableCentral
+                --disableYarnAudit
+                --suppression file:////var/lib/jenkins/workspace/gvPom/src/main/resources/suppressions.xml
+                --failOnCVSS 8
+            """, odcInstallation: '7.1.1'
+            this.steps.dependencyCheckPublisher pattern: "dependency-check-report.xml"
+
+        }
+    }
+
+    protected void vulnerabilityPublish() {
+
+    }
+
+    public void run() {
         preparePipeline()
         stages()
     }
