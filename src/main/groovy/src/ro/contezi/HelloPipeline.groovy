@@ -39,6 +39,11 @@ public class HelloPipeline implements Serializable {
       context.stage("Hi") {
         sayHello()
       }
+      if (context.param.PARAM == 'A') {
+        context.stage("A") {
+          context.echo "you picked A"
+        }
+      }
     }
   }
 

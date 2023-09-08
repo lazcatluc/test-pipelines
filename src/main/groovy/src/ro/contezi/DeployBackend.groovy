@@ -47,6 +47,8 @@ public class DeployBackend {
             context.env.PATH = "${jdk}/bin:${maven}/bin:${context.env.PATH}"
             compile()
             vulnerabilityCheck()
+            vulnerabilityPublish()
+            archiveArtifacts()
 
         }
     }
@@ -74,13 +76,17 @@ public class DeployBackend {
                 --suppression file:////var/lib/jenkins/workspace/gvPom/src/main/resources/suppressions.xml
                 --failOnCVSS 8
             """, odcInstallation: '7.1.1'
-            this.steps.dependencyCheckPublisher pattern: "dependency-check-report.xml"
-
         }
     }
 
     protected void vulnerabilityPublish() {
+        context.dependencyCheckPublisher pattern: "**/dependency-check-report.xml"
+    }
 
+    protected void archiveArtifacts() {
+        context.stage('Archiviazione') {
+            context.archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+        }
     }
 
     public void run() {
