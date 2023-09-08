@@ -25,8 +25,8 @@ public class HelloPipeline implements Serializable {
                     context.choice(choices: ['A', 'B'], name: 'PARAM')
             ])
     ])
-    def jdk = context.tool name: 'jdk8', type: 'JDK'
     context.node {
+      def jdk = context.tool name: 'jdk8', type: 'JDK'
       context.stage("Build") {
         context.env.JAVA_HOME = "${jdk}"
         context.env.PATH = "${jdk}/bin:${context.env.PATH}"
