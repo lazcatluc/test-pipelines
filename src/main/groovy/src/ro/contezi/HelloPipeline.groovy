@@ -9,15 +9,23 @@ public class HelloPipeline implements Serializable {
   }
 
   void run() {
-    def jdk = context.tool name: 'jdk8', type: 'JDK'
+    def buildDiscarderSettings = [
+                buildLogRetention: [
+                        daysToKeepStr: '30',
+                        numToKeepStr: '10'
+                ],
+                artifactRetention: [
+                        daysToKeepStr: '',
+                        numToKeepStr: ''
+                ]
+        ]
+    context.buildDiscarder buildDiscarderSettings
     context.properties ([
-        context.parameters ([
-            context.choice(choices: ['A', 'B'], name: 'PARAM')
-        ]),
-        context.buildDiscarder context.logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '30', numToKeepStr: '10'),
-
-
+            context.parameters ([
+                    context.choice(choices: ['A', 'B'], name: 'PARAM')
+            ])
     ])
+    def jdk = context.tool name: 'jdk8', type: 'JDK'
     context.node {
       context.stage("Build") {
         context.env.JAVA_HOME = "${jdk}"
