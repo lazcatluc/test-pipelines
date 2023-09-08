@@ -3,9 +3,15 @@ package ro.contezi
 public class HelloPipeline implements Serializable {
 
   def context
+  def a
+  def b
+  def c
 
-  public HelloPipeline(context) {
-    this.context = context;
+  public HelloPipeline(context, a, b, c) {
+    this.context = context
+    this.a = a
+    this.b = b
+    this.c = c
   }
 
   void run() {
@@ -70,7 +76,6 @@ public class HelloPipeline implements Serializable {
   }
 
   void sayHello() {
-    context.sh "echo 'Hello pipeline' context number ${context.BUILD_NUMBER}"
-    context.sh "echo 'Hello pipeline' context env number ${context.env.BUILD_NUMBER}"
+    context.sh "echo 'Hello pipeline' context number ${context.BUILD_NUMBER} ${a} ${b} ${c}"
   }
 }

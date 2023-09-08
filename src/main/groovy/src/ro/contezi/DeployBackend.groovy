@@ -3,18 +3,20 @@ package src.ro.contezi
 public class DeployBackend {
     def context
     def deploymentScript
+    def target
     def servers
     def testServers
 
-    public DeployBackend(context, deploymentScript, servers, testServers) {
+    public DeployBackend(context, deploymentScript, target, servers, testServers) {
         this.context = context
         this.deploymentScript = deploymentScript
+        this.target = target
         this.servers = servers
         this.testServers = testServers
     }
 
-    public DeployBackend(context, deploymentScript, servers) {
-        this(context, deploymentScript, servers, ['RQUI'])
+    public DeployBackend(context, deploymentScript, target, servers) {
+        this(context, deploymentScript, target, servers, ['RQUI'])
     }
 
     private void preparePipeline() {
@@ -55,6 +57,9 @@ public class DeployBackend {
                 installInTest()
             }
             deployToRepository()
+            if (context.params.MODALITA == 'PROD') {
+                deployToProduction()
+            }
         }
     }
 
@@ -90,7 +95,7 @@ public class DeployBackend {
 
     protected void archiveArtifacts() {
         context.stage('Archiviazione') {
-            context.archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+            context.archiveArtifacts artifacts: "target/*.${target}", followSymlinks: false
         }
     }
 
@@ -123,6 +128,7 @@ public class DeployBackend {
         }
         context.stage('Installo in produzione') {
             context.parallel(mappedServers)
+            context.mail bcc: '', body: "Autore: ${context.BUILD_USER_ID}(${context.BUILD_USER}), Build Number: ${context.BUILD_NUMBER}", cc: '', from: 'Jenkins', replyTo: '', subject: "Deploy in Produzione ${context.JOB_NAME}", to: 'areappt@gruppoveronesi.com'
         }
     }
 
