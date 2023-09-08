@@ -2,17 +2,19 @@ package src.ro.contezi
 
 public class DeployBackend {
     def context
+    def deploymentScript
     def servers
     def testServers
 
-    public DeployBackend(context, servers, testServers) {
+    public DeployBackend(context, deploymentScript, servers, testServers) {
         this.context = context
+        this.deploymentScript = deploymentScript
         this.servers = servers
         this.testServers = testServers
     }
 
-    public DeployBackend(context, servers) {
-        this(context, servers, ['RQUI'])
+    public DeployBackend(context, deploymentScript, servers) {
+        this(context, deploymentScript, servers, ['RQUI'])
     }
 
     private void preparePipeline() {
@@ -49,7 +51,10 @@ public class DeployBackend {
             vulnerabilityCheck()
             vulnerabilityPublish()
             archiveArtifacts()
-
+            if (context.params.MODALITA == 'TEST') {
+                installInTest()
+            }
+            deployToRepository()
         }
     }
 
@@ -86,6 +91,22 @@ public class DeployBackend {
     protected void archiveArtifacts() {
         context.stage('Archiviazione') {
             context.archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
+        }
+    }
+
+    protected void installInTest() {
+        context.stage('Installo in TEST') {
+            def server = context.params.TEST_SERVER.toLowerCase()
+            context.echo "Installo su ${server}..."
+            context.sh "${deploymentScript} ${server}"
+        }
+    }
+
+    protected void deployToRepository() {
+        context.configFileProvider([
+                context.configFile(fileId: 'global-maven-settings', targetLocation: 'testfile.xml')
+        ]) {
+            context.sh "mvn deploy -s testfile.xml"
         }
     }
 
