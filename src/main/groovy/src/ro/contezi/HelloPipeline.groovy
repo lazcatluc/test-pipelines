@@ -26,7 +26,6 @@ public class HelloPipeline implements Serializable {
     ]
     context.buildDiscarder buildDiscarderSettings
     context.properties([
-            context.agent context.any,
             context.parameters([
                     context.choice(choices: ['A', 'B'], name: 'PARAM')
             ])
@@ -34,7 +33,7 @@ public class HelloPipeline implements Serializable {
   }
 
   private void stages() {
-    context.node {
+    context.node('any') {
       def jdk = context.tool name: 'jdk8'
       context.stage("Build") {
         context.env.JAVA_HOME = "${jdk}"
