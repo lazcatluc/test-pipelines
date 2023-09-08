@@ -70,7 +70,6 @@ public class HelloPipeline implements Serializable {
   }
 
   void sayHello() {
-    context.sh "echo 'Hello pipeline' number ${BUILD_NUMBER}"
     context.sh "echo 'Hello pipeline' context number ${context.BUILD_NUMBER}"
     context.sh "echo 'Hello pipeline' context env number ${context.env.BUILD_NUMBER}"
   }
