@@ -36,10 +36,12 @@ public class HelloPipeline implements Serializable {
     context.node {
       def jdk = context.tool name: 'jdk8'
       context.stage("Build") {
-        context.env.JAVA_HOME = "${jdk}"
-        context.env.PATH = "${jdk}/bin:${context.env.PATH}"
-        context.sh "echo ${context.env.PATH}"
-        context.sh "java -version"
+        context.steps {
+          context.env.JAVA_HOME = "${jdk}"
+          context.env.PATH = "${jdk}/bin:${context.env.PATH}"
+          context.sh "echo ${context.env.PATH}"
+          context.sh "java -version"
+        }
       }
       context.stage("Hi") {
         sayHello()

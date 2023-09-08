@@ -37,6 +37,26 @@ public class DeployBackend {
         ])
     }
 
+    private void stages() {
+        context.node {
+            def jdk = context.tool name: 'jdk-8u202'
+            context.env.JAVA_HOME = "${jdk}"
+            def maven = context.tool name: 'maven-3.8.5'
+            context.env.M2_HOME = "${maven}"
+            context.env.MAVEN_HOME = "${maven}"
+            context.env.PATH = "${jdk}/bin:${maven}/bin:${context.env.PATH}"
+            compile()
+        }
+    }
+
+    protected void compile() {
+        context.stage('Compilazione') {
+            context.steps {
+
+            }
+        }
+    }
+
     void run() {
         preparePipeline()
         stages()
