@@ -47,13 +47,13 @@ public class HelloPipeline implements Serializable {
       context.stage('Parallelized') {
         context.parallel (
           'First parallel': context.stage('First parallel') {
-              context.sh('First')
+              context.echo 'First'
           },
           'Second parallel': context.stage('Second parallel') {
-            context.sh('Second')
+            context.echo 'Second'
           },
           'Third parallel': context.stage('Third parallel') {
-            context.sh('Third')
+            context.echo 'Third'
           }
         )
       }
