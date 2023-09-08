@@ -7,11 +7,11 @@ public class HelloPipeline implements Serializable {
   def b
   def c
 
-  public HelloPipeline(context, a, b, c) {
+  public HelloPipeline(context, options) {
     this.context = context
-    this.a = a
-    this.b = b
-    this.c = c
+    this.a = options.a
+    this.b = options.b
+    this.c = options.c
   }
 
   void run() {
