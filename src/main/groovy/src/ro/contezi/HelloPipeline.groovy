@@ -9,22 +9,31 @@ public class HelloPipeline implements Serializable {
   }
 
   void run() {
+    preparePipeline()
+    stages()
+  }
+
+  private void preparePipeline() {
     def buildDiscarderSettings = [
-                buildLogRetention: [
-                        daysToKeepStr: '30',
-                        numToKeepStr: '10'
-                ],
-                artifactRetention: [
-                        daysToKeepStr: '',
-                        numToKeepStr: ''
-                ]
-        ]
+            buildLogRetention: [
+                    daysToKeepStr: '30',
+                    numToKeepStr : '10'
+            ],
+            artifactRetention: [
+                    daysToKeepStr: '',
+                    numToKeepStr : ''
+            ]
+    ]
     context.buildDiscarder buildDiscarderSettings
-    context.properties ([
-            context.parameters ([
+    context.properties([
+            context.agent context.any,
+            context.parameters([
                     context.choice(choices: ['A', 'B'], name: 'PARAM')
             ])
     ])
+  }
+
+  private void stages() {
     context.node {
       def jdk = context.tool name: 'jdk8'
       context.stage("Build") {
