@@ -110,6 +110,23 @@ public class DeployBackend {
         }
     }
 
+    protected void deployToProduction() {
+        context.stage('Installo in produzione') {
+            def mappedServers = [:]
+            servers.each {
+                server ->
+                    mappedServers[server] = {
+                        context.stage(server) {
+                            context.echo "Installo su ${server}..."
+                            context.sh "${deploymentScript} ${server}"
+                        }
+                    }
+            }
+            context.parallel(mappedServers)
+        }
+    }
+
+
     public void run() {
         preparePipeline()
         stages()

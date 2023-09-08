@@ -44,24 +44,18 @@ public class HelloPipeline implements Serializable {
           context.echo "you picked A"
         }
       }
-      context.stage('Parallelized') {
-        context.parallel (
-          'First parallel': {
-            context.stage('First parallel') {
-              context.echo 'First'
-            }
-          },
-          'Second parallel': {
-            context.stage('Second parallel') {
-              context.echo 'Second'
-            }
-          },
-          'Third parallel': {
-            context.stage('Third parallel') {
-              context.echo 'Third'
+      def parallels= ['First', 'Second', 'Third', 'Fourth']
+      def mappedServers = [:]
+      parallels.each {
+        server ->
+          mappedServers[server] = {
+            context.stage(server) {
+              context.echo "${server}"
             }
           }
-        )
+      }
+      context.stage('Parallelized') {
+        context.parallel(mappedServers)
       }
     }
   }
