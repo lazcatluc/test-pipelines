@@ -46,13 +46,9 @@ public class HelloPipeline implements Serializable {
       context.stage("Hi") {
         sayHello()
       }
-      context.stage("A") {
-      if (context.params.PARAM == 'A') {
-          context.echo "you picked A"
-        } else {
-          Utils.markStageSkippedForConditional("A")
-        }
-      }
+      conditionalStage("A", context.params.PARAM == 'A', {
+        context.echo "you picked A"
+      })
       def parallels= ['First', 'Second', 'Third', 'Fourth']
       def mappedServers = [:]
       parallels.each {
@@ -69,6 +65,16 @@ public class HelloPipeline implements Serializable {
     }
   }
 
+  protected void conditionalStage(name, condition, steps) {
+    context.stage(name) {
+      if (condition) {
+        steps
+      } else {
+        Utils.markStageSkippedForConditional("A")
+      }
+    }
+  }
+
   private void build(jdk) {
     context.stage("Build") {
       context.env.JAVA_HOME = "${jdk}"
@@ -81,4 +87,5 @@ public class HelloPipeline implements Serializable {
   void sayHello() {
     context.sh "echo 'Hello pipeline' context number ${context.BUILD_NUMBER} ${a} ${b} ${c}"
   }
+
 }
