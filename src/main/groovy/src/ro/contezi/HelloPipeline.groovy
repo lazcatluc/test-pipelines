@@ -45,10 +45,9 @@ public class HelloPipeline implements Serializable {
       context.stage("Hi") {
         sayHello()
       }
-      if (context.params.PARAM == 'A') {
         context.stage("A") {
+          context.when context.params.PARAM == 'A'
           context.echo "you picked A"
-        }
       }
       def parallels= ['First', 'Second', 'Third', 'Fourth']
       def mappedServers = [:]
