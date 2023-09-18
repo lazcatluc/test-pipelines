@@ -68,7 +68,7 @@ public class HelloPipeline implements Serializable {
   protected void conditionalStage(name, condition, steps) {
     context.stage(name) {
       if (condition) {
-        steps
+        steps()
       } else {
         Utils.markStageSkippedForConditional("A")
       }
