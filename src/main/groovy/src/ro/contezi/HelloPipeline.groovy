@@ -1,4 +1,5 @@
 package ro.contezi
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 public class HelloPipeline implements Serializable {
 
@@ -45,10 +46,13 @@ public class HelloPipeline implements Serializable {
       context.stage("Hi") {
         sayHello()
       }
-      context.stage(name: "A", when: context.params.PARAM == 'A') {
-        context.echo "you picked A"
+      if (context.params.PARAM == 'A') {
+        context.stage("A") {
+          context.echo "you picked A"
+        }
+      } else {
+        Utils.markStageSkippedForConditional("A")
       }
-
       def parallels= ['First', 'Second', 'Third', 'Fourth']
       def mappedServers = [:]
       parallels.each {
