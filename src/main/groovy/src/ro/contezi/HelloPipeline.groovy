@@ -46,12 +46,12 @@ public class HelloPipeline implements Serializable {
       context.stage("Hi") {
         sayHello()
       }
+      context.stage("A") {
       if (context.params.PARAM == 'A') {
-        context.stage("A") {
           context.echo "you picked A"
+        } else {
+          Utils.markStageSkippedForConditional("A")
         }
-      } else {
-        Utils.markStageSkippedForConditional("A")
       }
       def parallels= ['First', 'Second', 'Third', 'Fourth']
       def mappedServers = [:]
